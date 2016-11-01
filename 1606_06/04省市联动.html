@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title></head>
+<body>
+<select id="province">
+</select>省
+<select id="city"></select>市
+<select id="county"></select>县市区
+</body>
+<script>var province = document.getElementById("province");
+// province.innerHTML ="<option>湖北</option><option>湖北</option><option>湖北</option>";
+var city = document.getElementById("city");
+var req = new XMLHttpRequest(); //
+
+req.open("get", "mockData/city.json", true);
+req.send();
+req.onreadystatechange = function() {
+	if(req.readyState == 4) {
+		if(req.status == 200) {
+			var result = req.responseText;
+			// var list = eval("("+result+")");
+			var list = JSON.parse(result);
+			var html = "";
+			for(var i in list) {
+				var p = list[i]["p"];
+				html += "<option>" + p + "</option>";
+			}
+			province.innerHTML = html;
+		}
+	}
+}
+
+//选择省份找到对应的城市
+province.onchange = function() {
+	//        alert("改变了");
+	var value = this.value;
+	var req = new XMLHttpRequest();
+	req.open("get", "mockData/city.json", true);
+	req.send();
+	req.onreadystatechange = function() {
+		if(req.readyState == 4 && req.status == 200) {
+			var list = JSON.parse(req.responseText);
+			for(var i in list) {
+				var p = list[i]["p"]; //省
+				if(p == value) {
+					var cityList = list[i]["c"]; //city的集合
+					var html = "";
+					for(var k in cityList) {
+						html += "<option>" + cityList[k]["c"] + "</option>";
+					}
+					city.innerHTML = html;
+				}
+			}
+		}
+	}
+
+}
+var county = document.getElementById("county")
+	//区的变化；
+city.onchange = function() {
+	//        alert("改变了");
+	var value = this.value;
+	var req = new XMLHttpRequest();
+	req.open("get", "mockData/city.json", true);
+	req.send();
+	req.onreadystatechange = function() {
+		if(req.readyState == 4 && req.status == 200) {
+			var list = JSON.parse(req.responseText);
+			for(var i in list) {
+				var cities = list[i]["c"]; //省
+				for(var k in cities) {
+					if(cities[k]["c"] == value) {
+						var ququ = list[i]["c"][k]["q"]; //city的集合
+						var html = "";
+						for(var j in ququ){
+							html += "<option>" + ququ[j] + "</option>";	
+						}
+						county.innerHTML = html;
+						break;
+					}
+				}
+			}
+			
+		}
+	}
+}
+
+
+
+
+
+
+
+
+</script>
+</html>

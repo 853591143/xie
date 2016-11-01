@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input id="search"/>
+<span id="result"></span>
+</body>
+<script>
+    //ajax
+    //异步的js和json数据
+    document.getElementById("search").onblur = function () {  //js来触发
+        //去服务器获取要显示的数据
+        var req = new XMLHttpRequest(); //建立一个请求
+        req.open("get", "mockData/1.txt", true);
+        req.send();
+        req.onreadystatechange = function () {
+            if (req.readyState == 4) {
+                if (req.status == 200) {
+                    var text = req.responseText;
+//                    alert(text);
+                    document.getElementById("result").innerHTML = text;
+                }
+            }
+        }
+    }
+
+</script>
+</html>
